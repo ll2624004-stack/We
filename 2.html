@@ -657,66 +657,6 @@ show standby brief
             </div>
         </div>
 
-        <div class="protocol-box">
-            <h4>🔗 3. EtherChannel - تجميع الروابط</h4>
-            
-            <p><strong>الوصف التقني:</strong> تقنية تجميع عدة روابط فيزيائية (حتى 8 روابط) في رابط منطقي واحد (Port-channel) لزيادة السعة والتكرار.</p>
-            
-            <p><strong>لماذا تم اختياره:</strong></p>
-            <ul style="margin-right: 20px; margin-top: 10px;">
-                <li><strong>زيادة النطاق الترددي:</strong> تجميع 2-8 روابط FastEthernet = 1 رابط Gigabit افتراضي</li>
-                <li><strong>التكرار الفوري:</strong> إذا فشل رابط واحد، يستمر الباقي بدون انقطاع</li>
-                <li><strong>توزيع الحمل:</strong> خوارزميات توزيع基于 MAC أو IP أو Port</li>
-                <li><strong>تجنب Loop:</strong> يعامل كرابط واحد من STP perspective</li>
-                <li><strong>بروتوكولات التفاوض:</strong> يدعم LACP (IEEE) و PAgP (Cisco)</li>
-            </ul>
-
-            <p><strong>أين يستخدم في المشروع:</strong></p>
-            <ul style="margin-right: 20px; margin-top: 10px;">
-                <li><strong>سويتش HR:</strong> Ports Fa0/5 + Fa0/6 bundled في Port-channel 1</li>
-                <li><strong>سويتش Design:</strong> 3 Channel Groups لربط السويتشات الأساسية</li>
-                <li><strong>سويتش Delivery:</strong> Ports Fa0/5 + Fa0/6 bundled</li>
-                <li><strong>السويتشات الرئيسية:</strong> ربط Distribution Switches بـ Core</li>
-            </ul>
-
-            <h4>الإعدادات الكاملة:</h4>
-            <div class="config-code" style="background: #2d2d2d;">
-! ============================================
-! إعداد EtherChannel باستخدام LACP (الطريقة المفضلة)
-! ============================================
-
-! على سويتش HR (HR_SW)
-HR_SW(config)#interface range FastEthernet0/5 - 6
-HR_SW(config-if-range)#description EtherChannel_to_Core_Switch
-HR_SW(config-if-range)#switchport mode trunk
-HR_SW(config-if-range)#switchport trunk allowed vlan 10,20,30,40,99
-HR_SW(config-if-range)#channel-group 1 mode active
-HR_SW(config-if-range)#no shutdown
-
-! إعداد Port-channel Interface
-HR_SW(config)#interface port-channel 1
-HR_SW(config-if)#switchport mode trunk
-HR_SW(config-if)#switchport trunk allowed vlan 10,20,30,40,99
-HR_SW(config-if)#spanning-tree portfast trunk
-
-! ============================================
-! إعداد EtherChannel باستخدام PAgP (Cisco Proprietary)
-! ============================================
-
-! على سويتش Design (Design_SW)
-Design_SW(config)#interface range FastEthernet0/1 - 2
-Design_SW(config-if-range)#switchport mode trunk
-Design_SW(config-if-range)#channel-group 2 mode desirable
-Design_SW(config-if-range)#no shutdown
-
-! ============================================
-! التحقق من EtherChannel
-! ============================================
-show etherchannel summary
-show etherchannel port-channel
-show interfaces port-channel 1
-            </div>
-        </div>
 
         <div class="protocol-box">
             <h4>📡 4. DHCP (Dynamic Host Configuration Protocol)</h4>
